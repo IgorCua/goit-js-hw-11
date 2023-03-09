@@ -10,7 +10,7 @@ const template = Handlebars.templates;
 const hiddenBtn = document.querySelector('.hidden');
 
 let page = 1;
-let limit = 100;
+let limit = 40;
 let category = '';
 let totalHits = 0;
 
