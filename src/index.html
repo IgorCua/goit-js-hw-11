@@ -7,17 +7,21 @@
     <link rel="stylesheet" href="./sass/index.scss" />
   </head>
   <body>
-    <form class="search-form" id="search-form">
-      <input
-        type="text"
-        name="searchQuery"
-        autocomplete="off"
-        placeholder="Search images..."
-      />
-      <button type="submit">Search</button>
-    </form>
     <div class="container">
-      <div class="images"></div>
+      <form class="search-form" id="search-form">
+        <input
+          type="text"
+          name="searchQuery"
+          autocomplete="off"
+          placeholder="Search images..."
+        />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    
+    <div class="gallery"></div>
+    
+    <div class="container hidden">
       <button type="button" class="loadMoreBtn">Load More</button>
     </div>
     

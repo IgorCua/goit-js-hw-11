@@ -1,39 +1,28 @@
-<ul class="container__img-list">
     {{#each arr}}
-        <li class="container__item">
-            <a class="container__link" href={{largeImageURL}}>
-                <img 
-                    src={{previewURL}} 
-                    alt={{tags}} 
-                    class="container__img"
-                    data-source={{largeImageURL}}
-                >
+        <div class="photo-card">
+            <a href={{largeImageURL}}>
+                <img src={{webformatURL}} alt="" loading="lazy" />
             </a>
-            <ul class="container__descr-list">
-                <li class="container__descr-item">
-                    <p>
-                        <span class="container__descr-item--span">Likes: </span>{{likes}}
-                    </p>
-                </li>
-                <li class="container__descr-item">
-                    <p>
-                        <span class="container__descr-item--span">Views: </span>{{views}}
-                    </p>
-                </li>
-                <li class="container__descr-item">
-                    <p>
-                        <span class="container__descr-item--span">Comments: </span>{{comments}}
-                    </p>
-                </li>
-                <li class="container__descr-item">
-                    <p>
-                        <span class="container__descr-item--span">Downloads: </span>{{downloads}}
-                    </p>
-                </li>
-            </ul>
-        </li>
+            <div class="info">
+                <p class="info-item">
+                    <b>Likes</b>
+                    {{likes}}
+                </p>
+                <p class="info-item">
+                    <b>Views</b>
+                    {{views}}
+                </p>
+                <p class="info-item">
+                    <b>Comments</b>
+                    {{comments}}
+                </p>
+                <p class="info-item">
+                    <b>Downloads</b>
+                    {{downloads}}
+                </p>
+            </div>  
+        </div>
     {{/each}}
-</ul>
 
 {{!-- webformatURL - посилання на маленьке зображення для списку карток.
 largeImageURL - посилання на велике зображення.
