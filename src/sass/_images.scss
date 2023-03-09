@@ -43,7 +43,9 @@ button:hover{
 
 .photo-card{
     width: 330px;
-
+}
+.photo-card a {
+    pointer-events: none;
 }
 
 .info{
