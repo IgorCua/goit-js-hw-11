@@ -17,7 +17,7 @@ let totalHits = 0;
 form.addEventListener('submit', formHandler);
 loadMoreBtn.addEventListener('click', loadMore);
 
-//Lightbox doesn't work yet 
+//Lightbox doesn't work yet
 const lightbox = new SimpleLightbox('.gallery .photo-card', { 
     captionSelector: 'img',
     captionDelay: 250
