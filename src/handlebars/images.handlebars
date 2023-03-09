@@ -1,0 +1,44 @@
+<ul class="container__img-list">
+    {{#each arr}}
+        <li class="container__item">
+            <a class="container__link" href={{largeImageURL}}>
+                <img 
+                    src={{previewURL}} 
+                    alt={{tags}} 
+                    class="container__img"
+                    data-source={{largeImageURL}}
+                >
+            </a>
+            <ul class="container__descr-list">
+                <li class="container__descr-item">
+                    <p>
+                        <span class="container__descr-item--span">Likes: </span>{{likes}}
+                    </p>
+                </li>
+                <li class="container__descr-item">
+                    <p>
+                        <span class="container__descr-item--span">Views: </span>{{views}}
+                    </p>
+                </li>
+                <li class="container__descr-item">
+                    <p>
+                        <span class="container__descr-item--span">Comments: </span>{{comments}}
+                    </p>
+                </li>
+                <li class="container__descr-item">
+                    <p>
+                        <span class="container__descr-item--span">Downloads: </span>{{downloads}}
+                    </p>
+                </li>
+            </ul>
+        </li>
+    {{/each}}
+</ul>
+
+{{!-- webformatURL - посилання на маленьке зображення для списку карток.
+largeImageURL - посилання на велике зображення.
+tags - рядок з описом зображення. Підійде для атрибуту alt.
+likes - кількість лайків.
+views - кількість переглядів.
+comments - кількість коментарів.
+downloads - кількість завантажень. --}}
