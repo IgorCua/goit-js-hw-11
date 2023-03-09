@@ -10,7 +10,7 @@ const template = Handlebars.templates;
 const hiddenBtn = document.querySelector('.hidden');
 
 let page = 1;
-let limit = 40;
+let limit = 100;
 let category = '';
 let totalHits = 0;
 
@@ -28,13 +28,13 @@ function formHandler(event){
     const inputVal = event.target.elements.searchQuery.value;
     category = inputVal;
     page = 1;
-
+    console.log('totalHits: ', totalHits)
     hiddenBtn.style.visibility = 'hidden';
 
     fetchImages(inputVal).then((images)=>{
         const arr = images.hits;
         totalHits = images.totalHits;
-        
+        console.log('totalHits: ', totalHits)
         if(arr.length === 0){
             Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
             return
@@ -50,7 +50,6 @@ function formHandler(event){
 
 function loadMore(){
     page += 1;
-    // console.log(totalHits)
     if(totalHits === 0){
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
         hiddenBtn.style.visibility = 'hidden';
@@ -60,6 +59,8 @@ function loadMore(){
     fetchImages(category).then((images)=>{
         const arr = images.hits;
         totalHits -= arr.length;
+        console.log(totalHits)
+
         // console.log('loadMore result: ', arr)
         gallery.insertAdjacentHTML('beforeend', template.images({arr}));
     })
