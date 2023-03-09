@@ -7,7 +7,7 @@ const form = document.querySelector('.search-form');
 const loadMoreBtn = document.querySelector('.loadMoreBtn');
 const gallery = document.querySelector('.gallery');
 const template = Handlebars.templates;
-const hiddennBtn = document.querySelector('.hidden');
+const hiddenBtn = document.querySelector('.hidden');
 
 let page = 1;
 let limit = 40;
@@ -28,7 +28,7 @@ function formHandler(event){
     category = inputVal;
     page = 1;
 
-    hiddennBtn.style.visibility = 'hidden';
+    hiddenBtn.style.visibility = 'hidden';
 
     fetchImages(inputVal).then((images)=>{
         const arr = images.hits;
@@ -40,7 +40,7 @@ function formHandler(event){
         }
         
         gallery.innerHTML = template.images({arr});
-        hiddennBtn.style.visibility = 'visible';
+        hiddenBtn.style.visibility = 'visible';
     })
     .catch(error=>console.log(error.message));
 
@@ -52,7 +52,7 @@ function loadMore(){
     // console.log(totalHits)
     if(totalHits === 0){
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
-        hiddennBtn.style.visibility = 'hidden';
+        hiddenBtn.style.visibility = 'hidden';
         return;
     }
 
