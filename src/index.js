@@ -38,11 +38,11 @@ async function formHandler(event){
     // hiddenBtn.style.visibility = 'visible';
 }
 
-// function loadImages()
 async function loadMore(){
+    let arr;
     page += 1;
     arr = await loadImages();
-    console.log(arr)
+    // console.log(arr);
     gallery.insertAdjacentHTML('beforeend', template.images({arr}));
 }
 
