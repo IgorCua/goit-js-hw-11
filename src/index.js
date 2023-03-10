@@ -31,6 +31,7 @@ async function formHandler(event){
     let data;
     
     hiddenBtn.style.visibility = 'hidden';
+    category = inputVal;
     
     try {
         const fetchedData = await fetchImages(inputVal);
@@ -47,7 +48,6 @@ async function formHandler(event){
     }
     
     totalHits = data.totalHits;
-    category = inputVal;
     page = 1;
 
     gallery.innerHTML = template.images({arr});
