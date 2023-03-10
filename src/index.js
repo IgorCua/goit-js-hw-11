@@ -14,6 +14,7 @@ const hiddenBtn = document.querySelector('.hidden');
 let page = 1;
 let limit = 40;
 let category = '';
+let imgCount = 0;
 
 form.addEventListener('submit', formHandler);
 loadMoreBtn.addEventListener('click', loadMore);
@@ -35,11 +36,11 @@ async function formHandler(event){
     page = 1;
     obj = await loadImages();
     arr = obj.hits;
+    imgCount = arr.length;
     
     gallery.innerHTML = template.images({arr});
-    // hiddenBtn.style.visibility = 'visible';
-    if(gallery.childElementCount === obj.total){
-        // console.log('hello')
+
+    if(imgCount === obj.total){
         hiddenBtn.style.visibility = 'hidden';
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         return;
@@ -51,15 +52,14 @@ async function loadMore(){
     let arr;
     
     page += 1;
+    
     obj = await loadImages();
     arr = obj.hits;
-    // console.log(arr);
-    console.log(obj.total);
+    imgCount += arr.length;
     
     gallery.insertAdjacentHTML('beforeend', template.images({arr}));
 
-    if(gallery.childElementCount === obj.total){
-        // console.log('hello')
+    if(imgCount === obj.total){
         hiddenBtn.style.visibility = 'hidden';
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         return;
@@ -67,14 +67,11 @@ async function loadMore(){
 }
 
 async function loadImages(){
-    // let arr;
     let result;
     try {
         const fetch = await fetchImages(category);
         result = fetch.data;
-        console.log("result", result)
-        console.log("fetch", fetch)
-        // console.log("children length", gallery.childElementCount)
+        
         if(fetch.data.hits.length === 0){
             Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
             gallery.innerHTML = '';
@@ -82,7 +79,6 @@ async function loadImages(){
         } else {
             hiddenBtn.style.visibility = 'visible';
         }
-        // if()
     } catch (error){
         if(error.code === "ERR_BAD_REQUEST"){
             hiddenBtn.style.visibility = 'hidden';
@@ -92,7 +88,6 @@ async function loadImages(){
         }
         console.log(error);
     }
-    // return arr;
     return result
 }
 
@@ -108,7 +103,6 @@ async function fetchImages(){
     });
 
     const response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
-    // console.log('fetchImages() result: ', response);
     return response;
 }
 
