@@ -31,35 +31,31 @@ async function formHandler(event){
     hiddenBtn.style.visibility = 'hidden';
     category = inputVal;
     page = 1;
-    
-    try {
-        const fetchedData = await fetchImages(inputVal);
-        arr = fetchedData.data.hits;
-        
-        if(fetchedData.data.hits.length === 0){
-            Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
-            gallery.innerHTML = '';
-            return
-        }
-        // console.log('formHandler() ', fetchedData);
-    } catch(error){
-        console.log(error.message);
-    }
-    
+    arr = await loadImages();
+    // console.log(arr)
     gallery.innerHTML = template.images({arr});
-    hiddenBtn.style.visibility = 'visible';
+    // hiddenBtn.style.visibility = 'visible';
 }
 
-function loadMore(){
+// function loadImages()
+async function loadMore(){
     page += 1;
-    loadMoreFetch();
+    arr = await loadImages();
+    gallery.insertAdjacentHTML('beforeend', template.images({arr}));
 }
 
-async function loadMoreFetch(){
+async function loadImages(){
     let arr;
     try {
         const fetch = await fetchImages(category);
         arr = fetch.data.hits;
+        if(fetch.data.hits.length === 0){
+            Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
+            gallery.innerHTML = '';
+            return
+        } else {
+            hiddenBtn.style.visibility = 'visible';
+        }
     } catch (error){
         if(error.code === "ERR_BAD_REQUEST"){
             hiddenBtn.style.visibility = 'hidden';
@@ -68,8 +64,7 @@ async function loadMoreFetch(){
         }
         console.log(error);
     }
-    
-    gallery.insertAdjacentHTML('beforeend', template.images({arr}));
+    return arr;
 }
 
 async function fetchImages(){
@@ -98,3 +93,19 @@ async function fetchImages(){
 // gallery.on('show.simplelightbox', function () {
 // 	// do something…
 // });
+
+  // console.log(arr)
+    // try {
+    //     const fetchedData = await fetchImages(inputVal);
+    //     arr = fetchedData.data.hits;
+        
+    //     // if(fetchedData.data.hits.length === 0){
+    //     //     Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
+    //     //     gallery.innerHTML = '';
+    //     //     return
+    //     // }
+    //     // console.log('formHandler() ', fetchedData);
+    // } catch(error){
+    //     console.log(error.message);
+    // }
+    // loadImages();
