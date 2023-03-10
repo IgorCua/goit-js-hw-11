@@ -1,3 +1,4 @@
+'use strict'
 import axios, { Axios } from 'axios';
 import Notiflix from 'notiflix';
 import SimpleLightbox from "simplelightbox";
@@ -41,6 +42,7 @@ async function formHandler(event){
 async function loadMore(){
     page += 1;
     arr = await loadImages();
+    console.log(arr)
     gallery.insertAdjacentHTML('beforeend', template.images({arr}));
 }
 
