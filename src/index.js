@@ -36,6 +36,7 @@ async function formHandler(event){
         const fetchedData = await fetchImages(inputVal);
         arr = fetchedData.data.hits;
         data = fetchedData;
+        console.log('formHandler() ', fetchedData);
     } catch(error){
         console.log(error.message);
     }
@@ -79,7 +80,7 @@ function loadMore(){
         return;
     }
 
-    loadMoreFetch()
+    loadMoreFetch();
 
     // fetchImages(category).then((images)=>{
     //     const arr = images.hits;
@@ -95,9 +96,10 @@ function loadMore(){
 }
 
 async function loadMoreFetch(){
+    let arr;
     try {
         const fetch = await fetchImages(category);
-        const arr = fetch.data.hits;
+        arr = fetch.data.hits;
         totalHits -= arr.length;
 
     } catch (error){
@@ -119,7 +121,7 @@ async function fetchImages(){
     });
 
     const response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
-    console.log('fetchImages result: ', response);
+    console.log('fetchImages() result: ', response);
     return response;
 }
 
