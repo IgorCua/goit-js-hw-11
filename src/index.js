@@ -1,3 +1,4 @@
+import axios, { Axios } from 'axios';
 import Notiflix from 'notiflix';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
@@ -10,7 +11,7 @@ const template = Handlebars.templates;
 const hiddenBtn = document.querySelector('.hidden');
 
 let page = 1;
-let limit = 40;
+let limit = 5;
 let category = '';
 let totalHits = 0;
 
@@ -18,55 +19,92 @@ form.addEventListener('submit', formHandler);
 loadMoreBtn.addEventListener('click', loadMore);
 
 //Lightbox doesn't work yet 
-const lightbox = new SimpleLightbox('.gallery .photo-card', { 
-    captionSelector: 'img',
-    captionDelay: 250
-})
+// const lightbox = new SimpleLightbox('.gallery .photo-card', { 
+//     captionSelector: 'img',
+//     captionDelay: 250
+// })
 
-function formHandler(event){
+async function formHandler(event){
     event.preventDefault();
-    const inputVal = event.target.elements.searchQuery.value;
+    const inputVal = event.target.elements.searchQuery.value.trim();
+    let arr;
+    let data;
+    
+    hiddenBtn.style.visibility = 'hidden';
+    
+    try {
+        const fetchedData = await fetchImages(inputVal);
+        arr = fetchedData.data.hits;
+        data = fetchedData;
+    } catch(error){
+        console.log(error.message);
+    }
+    
+    if(arr.length === 0){
+        Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
+        return
+    }
+    
+    totalHits = data.totalHits;
     category = inputVal;
     page = 1;
-    console.log('totalHits: ', totalHits)
-    hiddenBtn.style.visibility = 'hidden';
 
-    fetchImages(inputVal).then((images)=>{
-        const arr = images.hits;
-        totalHits = images.totalHits;
-        console.log('totalHits: ', totalHits)
-        if(arr.length === 0){
-            Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
-            return
-        }
+    gallery.innerHTML = template.images({arr});
+    hiddenBtn.style.visibility = 'visible';
+    
+    // fetchImages(inputVal).then((images)=>{
+    //     const arr = images.hits;
+    //     totalHits = images.totalHits;
+    //     console.log('totalHits: ', totalHits)
         
-        gallery.innerHTML = template.images({arr});
-        hiddenBtn.style.visibility = 'visible';
-    })
-    .catch(error=>console.log(error.message));
+    //     if(arr.length === 0){
+    //         Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
+    //         return
+    //     }
+        
+    //     gallery.innerHTML = template.images({arr});
+    //     hiddenBtn.style.visibility = 'visible';
+    // })
+    // .catch(error=>console.log(error.message));
 
-    lightbox.refresh();
+    // lightbox.refresh();
 }
 
 function loadMore(){
     page += 1;
+    
     if(totalHits === 0){
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
         hiddenBtn.style.visibility = 'hidden';
         return;
     }
 
-    fetchImages(category).then((images)=>{
-        const arr = images.hits;
-        totalHits -= arr.length;
-        console.log(totalHits)
+    loadMoreFetch()
 
-        // console.log('loadMore result: ', arr)
-        gallery.insertAdjacentHTML('beforeend', template.images({arr}));
-    })
-    .catch(error=>console.log(error.message));
+    // fetchImages(category).then((images)=>{
+    //     const arr = images.hits;
+    //     totalHits -= arr.length;
+    //     console.log(totalHits)
+
+    //     // console.log('loadMore result: ', arr)
+    //     gallery.insertAdjacentHTML('beforeend', template.images({arr}));
+    // })
+    // .catch(error=>console.log(error.message));
     
-    lightbox.refresh();
+    // lightbox.refresh();
+}
+
+async function loadMoreFetch(){
+    try {
+        const fetch = await fetchImages(category);
+        const arr = fetch.data.hits;
+        totalHits -= arr.length;
+
+    } catch (error){
+        console.log(error.message);
+    }
+    
+    gallery.insertAdjacentHTML('beforeend', template.images({arr}));
 }
 
 async function fetchImages(){
@@ -78,16 +116,11 @@ async function fetchImages(){
         safesearch: 'true',
         page: page,
         per_page: limit
-    })
+    });
 
-    try{
-        const response = await fetch(`https://pixabay.com/api/?${searchParams}`)
-        const images = await response.json();
-        console.log('fetchImages result: ', images)
-        return images;
-    } catch (error){
-        console.log(error.message);
-    }
+    const response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
+    console.log('fetchImages result: ', response);
+    return response;
 }
 
 
