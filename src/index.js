@@ -27,30 +27,54 @@ loadMoreBtn.addEventListener('click', loadMore);
 async function formHandler(event){
     event.preventDefault();
     const inputVal = event.target.elements.searchQuery.value.trim();
+    let obj;
     let arr;
-   
+    
     hiddenBtn.style.visibility = 'hidden';
     category = inputVal;
     page = 1;
-    arr = await loadImages();
-    // console.log(arr)
+    obj = await loadImages();
+    arr = obj.hits;
+    
     gallery.innerHTML = template.images({arr});
     // hiddenBtn.style.visibility = 'visible';
+    if(gallery.childElementCount === obj.total){
+        // console.log('hello')
+        hiddenBtn.style.visibility = 'hidden';
+        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        return;
+    }
 }
 
 async function loadMore(){
+    let obj
     let arr;
+    
     page += 1;
-    arr = await loadImages();
+    obj = await loadImages();
+    arr = obj.hits;
     // console.log(arr);
+    console.log(obj.total);
+    
     gallery.insertAdjacentHTML('beforeend', template.images({arr}));
+
+    if(gallery.childElementCount === obj.total){
+        // console.log('hello')
+        hiddenBtn.style.visibility = 'hidden';
+        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+        return;
+    }
 }
 
 async function loadImages(){
-    let arr;
+    // let arr;
+    let result;
     try {
         const fetch = await fetchImages(category);
-        arr = fetch.data.hits;
+        result = fetch.data;
+        console.log("result", result)
+        console.log("fetch", fetch)
+        // console.log("children length", gallery.childElementCount)
         if(fetch.data.hits.length === 0){
             Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
             gallery.innerHTML = '';
@@ -58,15 +82,18 @@ async function loadImages(){
         } else {
             hiddenBtn.style.visibility = 'visible';
         }
+        // if()
     } catch (error){
         if(error.code === "ERR_BAD_REQUEST"){
             hiddenBtn.style.visibility = 'hidden';
             Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+            console.log(error);
             return;
         }
         console.log(error);
     }
-    return arr;
+    // return arr;
+    return result
 }
 
 async function fetchImages(){
